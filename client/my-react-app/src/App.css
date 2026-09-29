@@ -2,14 +2,7 @@ body {
   margin: 0;
 }
 
-button,
-input {
-  font: inherit;
-}
 
-button {
-  transition: all 0.2s ease;
-}
 
 #root {
   min-height: 100vh;

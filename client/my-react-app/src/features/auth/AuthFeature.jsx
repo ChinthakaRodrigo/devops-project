@@ -31,8 +31,8 @@ function AuthFeature() {
     <main className="auth-page">
       <div className="auth-shell">
         <section className="brand-panel">
-          <div className="brand-badge">COMMUNITY</div>
-          <p className="eyebrow">Issue tracker</p>
+          <div className="brand-badge">COMMUNITY ISSUE TRACKER</div>
+          <br></br>
           <h1>{mode === 'login' ? 'Welcome back' : 'Build a better community'}</h1>
           <p className="brand-copy">
             {mode === 'login'
