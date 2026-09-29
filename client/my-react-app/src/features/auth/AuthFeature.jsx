@@ -86,7 +86,7 @@ function AuthFeature() {
 
           <div className="social-buttons">
             <button type="button">Google</button>
-            <button type="button">GitHub</button>
+            <button type="button">Facebook</button>
           </div>
 
           {statusMessage && <p className="status-message">{statusMessage}</p>}
