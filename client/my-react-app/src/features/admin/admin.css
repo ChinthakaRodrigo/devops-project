@@ -1,0 +1,264 @@
+.admin-app {
+  min-height: 100vh;
+  background: #f6f2eb;
+  color: #1e1d1a;
+}
+
+.admin-header {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px clamp(18px, 5vw, 64px);
+  background: #14120e;
+  border-bottom: 1px solid #302b22;
+  color: #fff;
+}
+
+.admin-header > div,
+.admin-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-brand,
+.admin-label,
+.admin-access-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 9px 13px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.admin-brand {
+  color: #f5ba38;
+  border: 1px solid #e2a832;
+  background: #23211b;
+}
+
+.admin-label {
+  color: #d4c9b7;
+  background: #29251e;
+}
+
+.admin-user-actions span {
+  color: #d4c9b7;
+}
+
+.admin-user-actions button {
+  padding: 10px 14px;
+  color: #f5ba38;
+  border: 1px solid #665123;
+  border-radius: 9px;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-user-actions button:hover {
+  background: #23211b;
+}
+
+.admin-main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 24px 64px;
+}
+
+.admin-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.admin-eyebrow {
+  margin: 0 0 8px;
+  color: #9a6a08;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.admin-heading h1 {
+  margin: 0;
+  color: #1e1d1a;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.admin-heading p:last-child {
+  margin: 8px 0 0;
+  color: #777166;
+}
+
+.admin-access-pill {
+  color: #5b4311;
+  background: #f5ba38;
+  letter-spacing: 0;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.admin-stats article {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid #e8e0d2;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.admin-stats span {
+  color: #777166;
+  font-size: 0.9rem;
+}
+
+.admin-stats strong {
+  color: #1e1d1a;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.admin-issues {
+  border: 1px solid #e8e0d2;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.admin-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #eee8dc;
+}
+
+.admin-section-heading h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.admin-section-heading p {
+  margin: 5px 0 0;
+  color: #777166;
+  font-size: 0.9rem;
+}
+
+.admin-section-heading > span {
+  color: #665123;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table-wrap th,
+.admin-table-wrap td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #f0ece4;
+  vertical-align: middle;
+}
+
+.admin-table-wrap th {
+  background: #faf8f5;
+  color: #716a5f;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.admin-table-wrap td {
+  color: #49443c;
+  font-size: 0.9rem;
+}
+
+.admin-table-wrap td:first-child {
+  min-width: 280px;
+}
+
+.admin-table-wrap td:first-child strong,
+.admin-table-wrap td:first-child small {
+  display: block;
+}
+
+.admin-table-wrap td:first-child strong {
+  color: #1e1d1a;
+}
+
+.admin-table-wrap td:first-child small {
+  max-width: 440px;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #8c867a;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-table-wrap select {
+  min-width: 130px;
+  padding: 9px 10px;
+  border: 1px solid #ded6c8;
+  border-radius: 8px;
+  background: #fff;
+  color: #1e1d1a;
+}
+
+.admin-table-wrap select:focus-visible,
+.admin-user-actions button:focus-visible {
+  outline: 2px solid #f5ba38;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .admin-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-header > div:first-child {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-main {
+    padding: 30px 14px 40px;
+  }
+
+  .admin-stats article {
+    padding: 15px;
+  }
+}
