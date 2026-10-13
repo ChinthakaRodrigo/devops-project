@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import LoginForm from '../../components/auth/LoginForm'
 import SignupForm from '../../components/auth/SignupForm'
 import { loginUser, signupUser } from '../../services/authService'
 import './auth.css'
 
-function AuthFeature() {
-  const [mode, setMode] = useState('login')
+function AuthFeature({ onLogin, mode: initialMode = 'login' }) {
+  const [mode, setMode] = useState(initialMode)
   const [isLoading, setIsLoading] = useState(false)
   const [statusMessage, setStatusMessage] = useState('')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setMode(initialMode)
+  }, [initialMode])
+
+  const changeMode = (nextMode) => {
+    setMode(nextMode)
+    navigate(nextMode === 'login' ? '/login' : '/signup')
+  }
 
   const handleSubmit = async (payload) => {
     setIsLoading(true)
@@ -19,7 +30,19 @@ function AuthFeature() {
           ? await loginUser(payload)
           : await signupUser(payload)
 
+      if (mode === 'login' && response.user) {
+        onLogin?.(response.user, payload.remember ?? true)
+        return
+      }
+
       setStatusMessage(response.message)
+
+      if (mode === 'signup') {
+        setTimeout(() => {
+          setMode('login')
+          navigate('/login')
+        }, 600)
+      }
     } catch (error) {
       setStatusMessage(error.message || 'Something went wrong. Please try again.')
     } finally {
@@ -61,14 +84,14 @@ function AuthFeature() {
             <button
               type="button"
               className={mode === 'login' ? 'tab active' : 'tab'}
-              onClick={() => setMode('login')}
+              onClick={() => changeMode('login')}
             >
               Login
             </button>
             <button
               type="button"
               className={mode === 'signup' ? 'tab active' : 'tab'}
-              onClick={() => setMode('signup')}
+              onClick={() => changeMode('signup')}
             >
               Sign Up
             </button>
@@ -93,13 +116,13 @@ function AuthFeature() {
 
           <p className="switch-copy">
             {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
-            <button
-              type="button"
+            <Link
               className="text-button inline"
-              onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+              to={mode === 'login' ? '/signup' : '/login'}
+              onClick={() => setStatusMessage('')}
             >
               {mode === 'login' ? 'Sign up' : 'Login'}
-            </button>
+            </Link>
           </p>
         </section>
       </div>
