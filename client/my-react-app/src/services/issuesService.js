@@ -1,52 +1,86 @@
-export const issueSeed = [
-  {
-    id: 108,
-    category: 'Electricity',
-    status: 'Pending',
-    title: 'Street light not working near bus stop',
-    description:
-      'The main street lamp outside the central bus terminal has been off for 3 days, causing commuter safety issues.',
-    location: 'Negombo Central',
-    time: 'Today',
-  },
-  {
-    id: 109,
-    category: 'Road',
-    status: 'In Progress',
-    title: 'Large pothole near market entry',
-    description:
-      'The pothole is causing vehicle damage and is now spreading after recent rainfall.',
-    location: 'Kandy Market',
-    time: '2 hours ago',
-  },
-  {
-    id: 110,
-    category: 'Garbage',
-    status: 'Resolved',
-    title: 'Overflowing bin outside school gate',
-    description:
-      'The municipal team cleared the blocked collection route and removed the waste pile.',
-    location: 'Maharagama',
-    time: 'Yesterday',
-  },
-  {
-    id: 111,
-    category: 'Water',
-    status: 'Pending',
-    title: 'No water supply in the residential lane',
-    description:
-      'Residents have reported a complete outage for the past two evenings in this neighborhood.',
-    location: 'Matara South',
-    time: '3 hours ago',
-  },
-  {
-    id: 112,
-    category: 'Other',
-    status: 'In Progress',
-    title: 'Broken public notice board',
-    description:
-      'The information board has detached from its frame and is blocking the footpath.',
-    location: 'Galle Fort',
-    time: '1 day ago',
-  },
-]
+const API_URL = 'http://localhost:8080/api/issues'
+
+// CREATE
+export const createIssue = async (issueData) => {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(issueData),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to create issue')
+  }
+
+  return await response.text()
+}
+
+// READ ALL
+export const getAllIssues = async () => {
+  const response = await fetch(API_URL)
+
+  if (!response.ok) {
+    throw new Error('Failed to load issues')
+  }
+
+  return await response.json()
+}
+
+// READ ONE
+export const getIssueById = async (id) => {
+  const response = await fetch(`${API_URL}/${id}`)
+
+  if (!response.ok) {
+    throw new Error('Failed to load issue')
+  }
+
+  return await response.json()
+}
+
+// UPDATE STATUS
+export const updateIssueStatus = async (id, status, forwardedTo) => {
+  const response = await fetch(`${API_URL}/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      status,
+      forwardedTo,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to update issue')
+  }
+
+  return await response.text()
+}
+
+// DELETE
+export const deleteIssue = async (id) => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to delete issue')
+  }
+
+  return await response.text()
+}
+
+// READ ISSUES BY COUNCIL
+export const getIssuesByCouncil = async (councilName) => {
+  const response = await fetch(
+    `${API_URL}/council/${encodeURIComponent(councilName)}`
+  )
+
+  if (!response.ok) {
+    throw new Error('Failed to load council issues')
+  }
+
+  return await response.json()
+}

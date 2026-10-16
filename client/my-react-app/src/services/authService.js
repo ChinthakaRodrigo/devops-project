@@ -1,21 +1,10 @@
-const USERS_KEY = 'communityIssueTrackerUsers'
+const API_URL = 'http://localhost:8080/api/auth'
+
 const CURRENT_USER_KEY = 'communityIssueTrackerCurrentUser'
-const defaultAccounts = [
-  {
-    id: 'default-citizen',
-    name: 'Citizen User',
-    email: 'citizen@example.com',
-    password: 'Citizen123!',
-    role: 'citizen',
-  },
-  {
-    id: 'default-admin',
-    name: 'Community Admin',
-    email: 'admin@example.com',
-    password: 'Admin123!',
-    role: 'admin',
-  },
-]
+
+const writeStorage = (storage, key, value) => {
+  storage.setItem(key, JSON.stringify(value))
+}
 
 const readStorage = (storage, key, fallbackValue) => {
   try {
@@ -24,34 +13,6 @@ const readStorage = (storage, key, fallbackValue) => {
   } catch {
     return fallbackValue
   }
-}
-
-const writeStorage = (storage, key, value) => {
-  storage.setItem(key, JSON.stringify(value))
-}
-
-export const getStoredUsers = () => {
-  const localUsers = readStorage(window.localStorage, USERS_KEY, [])
-  const users = Array.isArray(localUsers) ? localUsers : []
-  const accounts = [...users]
-
-  defaultAccounts.forEach((account) => {
-    const matchingUser = accounts.find(
-      (user) => user.email?.toLowerCase() === account.email,
-    )
-
-    if (!matchingUser) {
-      accounts.push(account)
-    } else if (!matchingUser.role) {
-      matchingUser.role = 'citizen'
-    }
-  })
-
-  if (accounts.length !== users.length || accounts.some((user, index) => user !== users[index])) {
-    writeStorage(window.localStorage, USERS_KEY, accounts)
-  }
-
-  return accounts
 }
 
 export const saveCurrentUser = (user, remember = true) => {
@@ -65,66 +26,90 @@ export const clearCurrentUser = () => {
 }
 
 export const getCurrentUser = () => {
-  const localUser = readStorage(window.localStorage, CURRENT_USER_KEY, null)
-  if (localUser) return { ...localUser, role: localUser.role || 'citizen' }
-
-  const sessionUser = readStorage(window.sessionStorage, CURRENT_USER_KEY, null)
-  return sessionUser ? { ...sessionUser, role: sessionUser.role || 'citizen' } : null
-}
-
-export const loginUser = async (credentials) => {
-  await new Promise((resolve) => setTimeout(resolve, 700))
-
-  if (!credentials.email || !credentials.password) {
-    throw new Error('Email and password are required.')
-  }
-
-  const users = getStoredUsers()
-  const user = users.find(
-    (item) =>
-      item.email.toLowerCase() === credentials.email.trim().toLowerCase() &&
-      item.password === credentials.password,
+  const localUser = readStorage(
+      window.localStorage,
+      CURRENT_USER_KEY,
+      null,
   )
 
-  if (!user) {
-    throw new Error('Invalid email or password.')
+  if (localUser) {
+    return localUser
   }
 
-  return {
-    success: true,
-    message: 'Login successful. Welcome back!',
-    user: { name: user.name, email: user.email, role: user.role || 'citizen' },
-  }
+  return readStorage(
+      window.sessionStorage,
+      CURRENT_USER_KEY,
+      null,
+  )
 }
 
 export const signupUser = async (userData) => {
-  await new Promise((resolve) => setTimeout(resolve, 800))
 
-  if (!userData.name || !userData.email || !userData.password) {
-    throw new Error('Please complete all fields to sign up.')
+  const response = await fetch(`${API_URL}/signup`, {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+    body: JSON.stringify({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error('Signup failed.')
   }
 
-  const users = getStoredUsers()
-  const normalizedEmail = userData.email.trim().toLowerCase()
-
-  if (users.some((user) => user.email.toLowerCase() === normalizedEmail)) {
-    throw new Error('An account with this email already exists.')
-  }
-
-  const newUser = {
-    id: Date.now(),
-    name: userData.name.trim(),
-    email: normalizedEmail,
-    password: userData.password,
-    role: 'citizen',
-  }
-
-  users.push(newUser)
-  writeStorage(window.localStorage, USERS_KEY, users)
+  const message = await response.text()
 
   return {
     success: true,
-    message: 'Account created successfully. Please log in to continue.',
-    user: { name: newUser.name, email: newUser.email, role: newUser.role },
+    message,
+  }
+}
+
+export const loginUser = async (credentials) => {
+
+  const response = await fetch(`${API_URL}/login`, {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+    body: JSON.stringify({
+      email: credentials.email,
+      password: credentials.password,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error('Login failed.')
+  }
+
+  const data = await response.json()
+
+  if (!data.success) {
+    throw new Error(data.message)
+  }
+
+  return {
+    success: true,
+
+    message: data.message,
+
+    user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+
+
+      role: data.role.toLowerCase(),
+
+      councilName: data.councilName,
+    },
   }
 }
