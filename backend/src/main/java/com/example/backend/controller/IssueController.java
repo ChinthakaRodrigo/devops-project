@@ -12,7 +12,8 @@ import java.util.List;
 @RequestMapping("/api/issues")
 @CrossOrigin(origins = {
         "http://localhost:5173",
-        "http://localhost:5174"
+        "http://localhost:5174",
+        "http://localhost:3000"
 })
 public class IssueController {
 

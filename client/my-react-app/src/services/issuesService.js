@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api/issues'
+const API_URL = '/api/issues'
 
 // CREATE
 export const createIssue = async (issueData) => {
