@@ -13,6 +13,7 @@ services:
       retries: 10
 
   backend:
+    build: ./backend    # Tells Docker where to find the backend Dockerfile
     image: community-issue-backend:latest
     ports:
       - "8080:8080"
@@ -25,6 +26,7 @@ services:
         condition: service_healthy
 
   frontend:
+    build: ./client/my-react-app   # Tells Docker where to find the frontend Dockerfile
     image: community-issue-frontend:latest
     ports:
       - "3000:80"

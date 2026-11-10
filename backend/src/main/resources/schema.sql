@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    council_name VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS issues (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    citizen_id INT NOT NULL,
+    council_name VARCHAR(255) DEFAULT NULL,
+    forwarded_to VARCHAR(255) DEFAULT NULL
+);
