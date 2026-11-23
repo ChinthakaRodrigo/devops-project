@@ -1,5 +1,8 @@
 pipeline {
-    agent any
+
+    agent {
+        label 'rootless-docker'
+    }
 
     stages {
 
@@ -9,7 +12,7 @@ pipeline {
             }
         }
 
-        stage('Backend Build & Test') {
+        stage('Backend Build') {
             steps {
                 dir('backend') {
                     sh 'chmod +x mvnw'
@@ -18,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Frontend Build & Test') {
+        stage('Frontend Build') {
             steps {
                 dir('client/my-react-app') {
                     sh 'npm ci'
@@ -36,11 +39,11 @@ pipeline {
 
     post {
         success {
-            echo 'CI Pipeline completed successfully!'
+            echo 'Community Issue Tracker CI completed!'
         }
 
         failure {
-            echo 'CI Pipeline failed!'
+            echo 'Community Issue Tracker CI failed!'
         }
     }
 }
