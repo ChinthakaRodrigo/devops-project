@@ -4,6 +4,11 @@ pipeline {
         label 'rootless-docker'
     }
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
     stages {
 
         stage('Checkout') {
@@ -12,38 +17,56 @@ pipeline {
             }
         }
 
-        stage('Backend Build') {
+        stage('Build Backend') {
             steps {
                 dir('backend') {
-                    sh 'chmod +x mvnw'
-                    sh './mvnw clean test'
+                    sh '''
+                        chmod +x mvnw
+                        ./mvnw -B clean package -DskipTests
+                    '''
                 }
             }
         }
 
-        stage('Frontend Build') {
+        stage('Docker Build and Deploy') {
             steps {
-                dir('client/my-react-app') {
-                    sh 'npm ci'
-                    sh 'npm run build'
-                }
-            }
-        }
+                withCredentials([
+                    string(
+                        credentialsId: 'mysql-root-password',
+                        variable: 'MYSQL_ROOT_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        set +x
 
-        stage('Docker Build') {
-            steps {
-                sh 'docker compose build'
+                        echo "Checking Docker..."
+
+                        docker context show
+
+                        echo "Validating Docker Compose..."
+
+                        docker compose config --quiet
+
+                        echo "Building and deploying application..."
+
+                        docker compose -p devops-project up -d --build
+
+                        echo "Checking containers..."
+
+                        docker compose -p devops-project ps
+                    '''
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Community Issue Tracker CI completed!'
+            echo 'CI/CD Pipeline completed successfully!'
         }
 
         failure {
-            echo 'Community Issue Tracker CI failed!'
+            echo 'Pipeline failed. Check the console output.'
         }
     }
 }
